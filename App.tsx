@@ -222,8 +222,7 @@ const FunnelModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void
   };
 
   const handleFinalize = () => {
-    // Logic to redirect to checkout would go here
-    window.location.href = "https://pay.hotmart.com/"; // Placeholder
+    window.location.href = "https://go.centerpag.com/PPU38CQ61TB";
   };
 
   if (!isOpen) return null;
