@@ -189,20 +189,18 @@ const SocialProofPopup = () => {
 
 type FunnelStep = 'idle' | 'intent' | 'form_back' | 'form_new' | 'loading' | 'success';
 
-const FunnelModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
+const FunnelView = ({ onClose }: { onClose: () => void }) => {
   const [step, setStep] = useState<FunnelStep>('intent');
   const [yourName, setYourName] = useState('');
   const [targetName, setTargetName] = useState('');
   const [loadingText, setLoadingText] = useState('Iniciando conexión espiritual...');
 
-  // Reset state when opening
+  // Reset state on mount
   useEffect(() => {
-    if (isOpen) {
-      setStep('intent');
-      setYourName('');
-      setTargetName('');
-    }
-  }, [isOpen]);
+    setStep('intent');
+    setYourName('');
+    setTargetName('');
+  }, []);
 
   const handleStartLoading = () => {
     setStep('loading');
@@ -225,12 +223,11 @@ const FunnelModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void
     window.location.href = "https://go.centerpag.com/PPU38CQ61TB";
   };
 
-  if (!isOpen) return null;
-
   return (
-    <div className="fixed inset-0 z-[9999] bg-black text-white flex flex-col overflow-y-auto">
-       <div className="flex justify-end p-4">
-         <button onClick={onClose} className="text-zinc-400 hover:text-white">
+    <div className="min-h-screen bg-black text-white flex flex-col animate-in fade-in duration-500">
+       <div className="flex justify-end p-4 md:p-6">
+         <button onClick={onClose} className="text-zinc-400 hover:text-white flex items-center gap-2 transition-colors">
+           <span className="text-sm uppercase tracking-widest font-bold">Volver</span>
            <X size={32} />
          </button>
        </div>
@@ -407,23 +404,24 @@ export default function App() {
 
   const openFunnel = () => {
     setIsFunnelOpen(true);
-    // Prevent background scrolling
-    document.body.style.overflow = 'hidden';
+    window.scrollTo(0, 0); // Reset scroll to top
+    // Prevent background scrolling not needed if we replace view
   };
 
   const closeFunnel = () => {
     setIsFunnelOpen(false);
-    document.body.style.overflow = 'auto';
+    window.scrollTo(0, 0); // Reset scroll to top
   };
+
+  if (isFunnelOpen) {
+    return <FunnelView onClose={closeFunnel} />;
+  }
 
   return (
     <div className="min-h-screen bg-black text-zinc-200 overflow-x-hidden selection:bg-red-900 selection:text-white pb-20">
       
       {/* Social Proof Popup */}
       <SocialProofPopup />
-
-      {/* The Funnel Modal */}
-      <FunnelModal isOpen={isFunnelOpen} onClose={closeFunnel} />
 
       {/* Urgency Banner */}
       <div className="bg-red-700 text-white font-medium text-center py-3 px-4 shadow-lg border-b border-red-900 z-50 relative">
